@@ -7,6 +7,7 @@ import net.anguslong.todolist.model.ToDoList;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -18,7 +19,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
@@ -57,7 +61,7 @@ public class TaskListFragment extends ListFragment {
 		getActivity().setTitle(R.string.title);
 		mTasks = ToDoList.get(getActivity()).getTasks();
 
-		makeAdapterAndRefresh();
+		setListAdapterAndRefresh();
 
 	}
 
@@ -69,14 +73,14 @@ public class TaskListFragment extends ListFragment {
 		super.onResume();
 		// if flagShowChecked is true then pass the unfiltered array to the
 		// adapter
-		makeAdapterAndRefresh(); // added this to refresh the screen
+		setListAdapterAndRefresh(); // added this to refresh the screen
 	}
 
 	/**
 	 * refactoring out the methods called in onCreate and onResume to get the
 	 * appropriate list depending on the preferences
 	 */
-	private void makeAdapterAndRefresh() {
+	private void setListAdapterAndRefresh() {
 		mUncheckedTasks = getUncheckedTasks(); // create a filtered array
 
 		if (((ToDoListApplication) getActivity().getApplication())
@@ -175,7 +179,11 @@ public class TaskListFragment extends ListFragment {
 		Intent i = new Intent(getActivity(), TaskPagerActivity.class);
 		i.putExtra(TaskFragment.EXTRA_TASK_ID, c.getId());
 		startActivityForResult(i, 0);
+		
+		
 	}
+	
+	
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -188,7 +196,7 @@ public class TaskListFragment extends ListFragment {
 		}
 
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
+		public View getView(final int position, View convertView, ViewGroup parent) {
 			// if we weren't given a view, inflate one
 			if (null == convertView) {
 				convertView = getActivity().getLayoutInflater().inflate(
@@ -196,7 +204,7 @@ public class TaskListFragment extends ListFragment {
 			}
 
 			// configure the view for this Crime
-			Task c = getItem(position);
+			final Task c = getItem(position);
 
 			TextView titleTextView = (TextView) convertView
 					.findViewById(R.id.crime_list_item_titleTextView);
@@ -205,8 +213,21 @@ public class TaskListFragment extends ListFragment {
 			CheckBox solvedCheckBox = (CheckBox) convertView
 					.findViewById(R.id.crime_list_item_solvedCheckBox);
 			solvedCheckBox.setChecked(c.isComplete());
+			
+			solvedCheckBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+				@Override
+				public void onCheckedChanged(CompoundButton buttonView,
+						boolean isChecked) {
+					c.setComplete(isChecked);
+					
+				}
+				
+			});
 
 			return convertView;
 		}
 	}
+	 
+	
 }
