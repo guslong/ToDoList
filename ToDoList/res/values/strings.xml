@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">ToDo List</string>
+  <string name="title_hint">Enter a task</string>
+  <string name="title_label">Title</string> 
+  <string name="details_label">Details</string> 
+  <string name="completed_label">Complete?</string>
+
+  <string name="title">ToDo List</string>
+  <string name="notes_lbl">Notes</string>
+  <string name="date_picker_title">Task due date:</string>
+
+  <string name="new_task">New Task</string>
+
+  <string name="delete_task">Delete</string>
+  <string name="preferences_lbl">Settings</string>
+  <string name="pref_on">Show completed items</string>
+  <string name="checked_pref_key">checked_pref_key</string>
+
+</resources>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" android:title="Application Preferences">
+    <CheckBoxPreference android:key="@string/checked_pref_key" android:summaryOn="@string/pref_on" android:summaryOff="@string/pref_on"/>
+showCheckedItems
+</PreferenceScreen>
