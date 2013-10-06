@@ -190,6 +190,22 @@ public class TaskListFragment extends ListFragment {
 		startActivityForResult(i, 0);
 
 	}
+	
+	
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		ToDoList.get(getActivity()).saveTasks();
+	}
+
+	
+	@Override
+	public void onStop() {
+		// TODO Auto-generated method stub
+		super.onStop();
+		ToDoList.get(getActivity()).saveTasks();
+	}
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {

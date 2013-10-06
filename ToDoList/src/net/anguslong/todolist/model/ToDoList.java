@@ -52,6 +52,7 @@ public class ToDoList {
     
     public void deleteTask(Task task) {
     	mTasks.remove(task);
+
     }
     
     public Task getTask(UUID id) {
