@@ -21,6 +21,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.Toast;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -114,6 +115,13 @@ public class TaskListFragment extends ListFragment {
 		case R.id.menu_item_settings:
 			startActivity(intentPrefs);
 			return true;
+			
+			// puts a help icon which displays an activity showing the author's name
+		case R.id.menu_item_info:
+			Intent intent = new Intent(getActivity(), InfoScreen.class);
+			startActivity(intent);
+
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -144,6 +152,7 @@ public class TaskListFragment extends ListFragment {
 			ToDoList.get(getActivity()).deleteTask(task);
 			adapter.notifyDataSetChanged();
 			return true;
+
 		}
 
 		return super.onContextItemSelected(item);
@@ -179,11 +188,8 @@ public class TaskListFragment extends ListFragment {
 		Intent i = new Intent(getActivity(), TaskPagerActivity.class);
 		i.putExtra(TaskFragment.EXTRA_TASK_ID, c.getId());
 		startActivityForResult(i, 0);
-		
-		
+
 	}
-	
-	
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -196,7 +202,8 @@ public class TaskListFragment extends ListFragment {
 		}
 
 		@Override
-		public View getView(final int position, View convertView, ViewGroup parent) {
+		public View getView(final int position, View convertView,
+				ViewGroup parent) {
 			// if we weren't given a view, inflate one
 			if (null == convertView) {
 				convertView = getActivity().getLayoutInflater().inflate(
@@ -209,26 +216,26 @@ public class TaskListFragment extends ListFragment {
 			TextView titleTextView = (TextView) convertView
 					.findViewById(R.id.crime_list_item_titleTextView);
 			titleTextView.setText(c.getTitle());
-			
+
 			CheckBox solvedCheckBox = (CheckBox) convertView
 					.findViewById(R.id.crime_list_item_solvedCheckBox);
 			solvedCheckBox.setChecked(c.isComplete());
-			
-			// adds a checkbox changed listener to the checkbox in the listview
-			solvedCheckBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
-				@Override
-				public void onCheckedChanged(CompoundButton buttonView,
-						boolean isChecked) {
-					c.setComplete(isChecked);
-					
-				}
-				
-			});
+			// adds a checkbox changed listener to the checkbox in the listview
+			solvedCheckBox
+					.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+						@Override
+						public void onCheckedChanged(CompoundButton buttonView,
+								boolean isChecked) {
+							c.setComplete(isChecked);
+
+						}
+
+					});
 
 			return convertView;
 		}
 	}
-	 
-	
+
 }

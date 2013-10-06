@@ -26,6 +26,8 @@
     </activity>
     <activity 
         android:name="net.anguslong.todolist.PrefsActivity"></activity>
+    <activity 
+        android:name="net.anguslong.todolist.InfoScreen"></activity>
   </application>
 
 </manifest>
