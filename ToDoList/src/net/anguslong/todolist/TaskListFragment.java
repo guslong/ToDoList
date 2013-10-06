@@ -37,9 +37,8 @@ public class TaskListFragment extends ListFragment {
     @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		//return inflater.inflate(R.layout.list_view, null); // don't know what this was doing before
-    	
-    	View v = super.onCreateView(inflater, container, savedInstanceState);
+
+    	View v = inflater.inflate(R.layout.list_view, null);
     	
     	// register the items for context menu on long press 
     	ListView listView = (ListView)v.findViewById(android.R.id.list);
