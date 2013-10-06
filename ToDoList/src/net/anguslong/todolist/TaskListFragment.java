@@ -2,27 +2,22 @@ package net.anguslong.todolist;
 
 import java.util.ArrayList;
 
-import net.anguslong.todolist.R;
 import net.anguslong.todolist.model.Task;
 import net.anguslong.todolist.model.ToDoList;
-
-
 import android.content.Intent;
-
 import android.os.Bundle;
-
 import android.support.v4.app.ListFragment;
-
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -42,7 +37,16 @@ public class TaskListFragment extends ListFragment {
     @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.list_view, null);
+		//return inflater.inflate(R.layout.list_view, null); // don't know what this was doing before
+    	
+    	View v = super.onCreateView(inflater, container, savedInstanceState);
+    	
+    	// register the items for context menu on long press 
+    	ListView listView = (ListView)v.findViewById(android.R.id.list);
+    	registerForContextMenu(listView);
+    	
+		return v;
+    	
 	}
 
 	@Override
@@ -67,12 +71,14 @@ public class TaskListFragment extends ListFragment {
         }
         
 		setListAdapter(adapter);
-             
-                
+           
+	
+       adapter.notifyDataSetChanged();    // added this to refresh the screen      
         
     }
 
-    @Override
+
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		
     	// intent for the preferences screen
@@ -94,6 +100,37 @@ public class TaskListFragment extends ListFragment {
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+    
+    /**
+     * inflate the context menu
+     */
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
+		getActivity().getMenuInflater().inflate(R.menu.list_item_context, menu);
+	}
+
+	
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		
+		// gets the location of the item where the context menu was selected
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo)item.getMenuInfo();
+		int position = info.position;
+		TaskAdapter adapter = (TaskAdapter)getListAdapter();
+		Task task = adapter.getItem(position);
+		
+		// delete the item
+		switch (item.getItemId()) {
+		case R.id.menu_item_delete_task:
+			ToDoList.get(getActivity()).deleteTask(task);
+			adapter.notifyDataSetChanged();
+			return true;
+		}
+		
+		
+		return super.onContextItemSelected(item);
 	}
 
 	/**

@@ -50,6 +50,10 @@ public class ToDoList {
     	mTasks.add(task);
     }
     
+    public void deleteTask(Task task) {
+    	mTasks.remove(task);
+    }
+    
     public Task getTask(UUID id) {
         for (Task c : mTasks) {
             if (c.getId().equals(id))
