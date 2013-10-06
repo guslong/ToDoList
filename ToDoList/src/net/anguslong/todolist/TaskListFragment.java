@@ -76,7 +76,31 @@ public class TaskListFragment extends ListFragment {
         
     }
 
+/**
+ * attempting to use the onresume method to update the list contents
+ */
+	@Override
+	public void onResume() {
+		super.onResume();
+		// if flagShowChecked is true then pass the unfiltered array to the adapter
+        TaskAdapter adapter;
+        
+        
+        if ( ((ToDoListApplication)getActivity().getApplication()).isShowCheckedItems() == true) {
+        	adapter = new TaskAdapter(mTasks);
+            
+        }
+        else {
+        	adapter = new TaskAdapter(mUncheckedTasks);
+        }
+        
+		setListAdapter(adapter);
+           
+	
+       adapter.notifyDataSetChanged();    // added this to refresh the screen      
+	}
 
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		
