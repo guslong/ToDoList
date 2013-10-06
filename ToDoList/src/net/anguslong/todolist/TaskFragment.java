@@ -14,7 +14,9 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -37,6 +39,8 @@ public static final String DIALOG_DATE = "date";
 
     CheckBox mCompleteCheckBox;
 
+    Button mSaveButton;
+    
     public static TaskFragment newInstance(UUID taskId) {
         Bundle args = new Bundle();
         args.putSerializable(EXTRA_TASK_ID, taskId);
@@ -111,6 +115,18 @@ public static final String DIALOG_DATE = "date";
             }
         });       
   
+        mSaveButton = (Button)v.findViewById(R.id.save_button);
+        mSaveButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (NavUtils.getParentActivityName(getActivity()) != null) {
+					NavUtils.navigateUpFromSameTask(getActivity());
+				}
+				
+			}
+		});
+        
         return v; 
     }
     

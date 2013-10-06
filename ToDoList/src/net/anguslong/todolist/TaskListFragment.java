@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 import net.anguslong.todolist.model.Task;
 import net.anguslong.todolist.model.ToDoList;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -16,13 +16,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
@@ -209,11 +209,12 @@ public class TaskListFragment extends ListFragment {
 			TextView titleTextView = (TextView) convertView
 					.findViewById(R.id.crime_list_item_titleTextView);
 			titleTextView.setText(c.getTitle());
-
+			
 			CheckBox solvedCheckBox = (CheckBox) convertView
 					.findViewById(R.id.crime_list_item_solvedCheckBox);
 			solvedCheckBox.setChecked(c.isComplete());
 			
+			// adds a checkbox changed listener to the checkbox in the listview
 			solvedCheckBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
 				@Override

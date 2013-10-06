@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+ >
 
     <TextView
         style="?android:listSeparatorTextViewStyle"
@@ -17,6 +18,8 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:hint="@string/title_hint"
+        android:imeOptions="actionDone"
+        android:focusable="true"
         />
 
     <TextView
@@ -46,10 +49,10 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:ems="10"
-        android:inputType="textMultiLine" >
+        android:inputType="textMultiLine" 
+        android:imeOptions="actionDone">
 
-        <requestFocus />
-    </EditText>
+         </EditText>
 
     <CheckBox
         android:id="@+id/crime_solved"
@@ -58,5 +61,13 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:text="@string/completed_label" />
+
+    <Button
+        android:id="@+id/save_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:text="Save" />
 
 </LinearLayout>
