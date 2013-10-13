@@ -210,12 +210,14 @@ public class TaskListFragment extends ListFragment {
 	}
 
 	private class TaskAdapter extends ArrayAdapter<Task> {
+		Task c;
+		
 		public TaskAdapter(ArrayList<Task> tasks) {
 			super(getActivity(), android.R.layout.simple_list_item_1, tasks);
 		}
 
 		@Override
-		public View getView(final int position, View convertView,
+		public View getView(int position, View convertView,
 				ViewGroup parent) {
 			// if we weren't given a view, inflate one
 			if (null == convertView) {
@@ -224,7 +226,7 @@ public class TaskListFragment extends ListFragment {
 			}
 
 			// configure the view for this Crime
-			final Task c = getItem(position);
+			c = getItem(position);
 
 			TextView titleTextView = (TextView) convertView
 					.findViewById(R.id.crime_list_item_titleTextView);
