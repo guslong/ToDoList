@@ -30,7 +30,7 @@ import android.widget.EditText;
 public class TaskFragment extends Fragment {
 
 
-	public static final String EXTRA_TASK_ID = "criminalintent.CRIME_ID";
+	public static final String EXTRA_TASK_ID = "taskID";
 public static final String DIALOG_DATE = "date";
 
     Task mTask;
@@ -55,8 +55,8 @@ public static final String DIALOG_DATE = "date";
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true); // tell android that this fragment has an options menu
-        UUID crimeId = (UUID)getArguments().getSerializable(EXTRA_TASK_ID);
-        mTask = ToDoList.get(getActivity()).getTask(crimeId);
+        UUID taskId = (UUID)getArguments().getSerializable(EXTRA_TASK_ID);
+        mTask = ToDoList.get(getActivity()).getTask(taskId);
     }
 
     @TargetApi(11)
