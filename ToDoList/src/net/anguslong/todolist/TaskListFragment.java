@@ -35,8 +35,9 @@ import android.widget.TextView;
 public class TaskListFragment extends ListFragment {
 
 	private ArrayList<Task> mTasks;
-	private ArrayList<Task> mUncheckedTasks; // uncomment if using the option
-												// for showing unchecked
+	
+	private ArrayList<Task> mUncheckedTasks; 
+	
 	private TaskAdapter adapter;
 
 	@Override
@@ -61,13 +62,7 @@ public class TaskListFragment extends ListFragment {
 		getActivity().setTitle(R.string.title);
 		mTasks = ToDoList.get(getActivity()).getTasks();
 
-		// set the list adapter and refresh
-		// adapter = new TaskAdapter(getActivity(), mTasks); // comment these
-		// three lines out if implementing the show only unchecked items option
-		// setListAdapter(adapter);
-		// adapter.notifyDataSetChanged();
-		setListAdapterAndRefresh(); // uncomment this to restore the show only
-									// unchecked items
+		setListAdapterAndRefresh(); 
 	}
 
 	/**
@@ -76,9 +71,9 @@ public class TaskListFragment extends ListFragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		// if flagShowChecked is true then pass the unfiltered array to the
-		// adapter
-		adapter.notifyDataSetChanged(); // added this to refresh the screen
+		setListAdapterAndRefresh(); 
+		//adapter.notifyDataSetChanged(); // added this to refresh the screen
+		
 	}
 
 	/**

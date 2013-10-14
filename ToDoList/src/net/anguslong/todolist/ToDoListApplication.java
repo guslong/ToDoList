@@ -51,6 +51,7 @@ private void getPrefs() {
 
           getPrefs();
           Log.d(TAG, "sharedPreferences changed");
+          
 
      }
 
