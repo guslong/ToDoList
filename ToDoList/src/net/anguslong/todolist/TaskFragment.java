@@ -23,114 +23,118 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 
 /**
- * used to be CrimeFragment
  * @author anguslong
- *
+ * 
  */
 public class TaskFragment extends Fragment {
 
-
 	public static final String EXTRA_TASK_ID = "taskID";
-public static final String DIALOG_DATE = "date";
+//	public static final String DIALOG_DATE = "date";
 
-    Task mTask;
-    EditText mTitleField;
-    EditText mNotesField;
+	Task mTask;
+	
+	EditText mTitleField;
+	EditText mNotesField;
+	CheckBox mCompleteCheckBox;
+	Button mSaveButton;
 
-    CheckBox mCompleteCheckBox;
+	public static TaskFragment newInstance(UUID taskId) {
+		Bundle args = new Bundle();
+		args.putSerializable(EXTRA_TASK_ID, taskId);
 
-    Button mSaveButton;
-    
-    public static TaskFragment newInstance(UUID taskId) {
-        Bundle args = new Bundle();
-        args.putSerializable(EXTRA_TASK_ID, taskId);
+		TaskFragment fragment = new TaskFragment();
+		fragment.setArguments(args);
 
-        TaskFragment fragment = new TaskFragment();
-        fragment.setArguments(args);
+		return fragment;
+	}
 
-        return fragment;
-    }
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true); // tell android that this fragment has an
+									// options menu
+		UUID taskId = (UUID) getArguments().getSerializable(EXTRA_TASK_ID);
+		mTask = ToDoList.get(getActivity()).getTask(taskId);
+	}
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true); // tell android that this fragment has an options menu
-        UUID taskId = (UUID)getArguments().getSerializable(EXTRA_TASK_ID);
-        mTask = ToDoList.get(getActivity()).getTask(taskId);
-    }
+	@TargetApi(11)
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup parent,
+			Bundle savedInstanceState) {
+		View v = inflater.inflate(R.layout.fragment_task, parent, false);
 
-    @TargetApi(11)
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_task, parent, false);
-        
-        //set up button for Gingerbread and above
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-        	if (NavUtils.getParentActivityName(getActivity()) != null) {
-        	getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
-        	}
-        }
-        
-        mTitleField = (EditText)v.findViewById(R.id.crime_title);
-        mTitleField.setText(mTask.getTitle());
-        mTitleField.requestFocus();
-        mTitleField.addTextChangedListener(new TextWatcher() {
-            public void onTextChanged(CharSequence c, int start, int before, int count) {
-                mTask.setTitle(c.toString());
-            }
+		// set up button for Gingerbread and above
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			if (NavUtils.getParentActivityName(getActivity()) != null) {
+				getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+			}
+		}
 
-            public void beforeTextChanged(CharSequence c, int start, int count, int after) {
-                // this space intentionally left blank
-            }
+		mTitleField = (EditText) v.findViewById(R.id.crime_title);
+		mTitleField.setText(mTask.getTitle());
+		mTitleField.requestFocus();
+		mTitleField.addTextChangedListener(new TextWatcher() {
+			public void onTextChanged(CharSequence c, int start, int before,
+					int count) {
+				mTask.setTitle(c.toString());
+			}
 
-            public void afterTextChanged(Editable c) {
-                // this one too
-            }
-        });
-        
-        // adding a new notes field
-        mNotesField = (EditText)v.findViewById(R.id.notes_edittext);
-        mNotesField.setText(mTask.getNotes());
-        mNotesField.addTextChangedListener(new TextWatcher() {
-            public void onTextChanged(CharSequence c, int start, int before, int count) {
-                mTask.setNotes(c.toString());
-            }
+			public void beforeTextChanged(CharSequence c, int start, int count,
+					int after) {
+				// this space intentionally left blank
+			}
 
-            public void beforeTextChanged(CharSequence c, int start, int count, int after) {
-                // this space intentionally left blank
-            }
+			public void afterTextChanged(Editable c) {
+				// this one too
+			}
+		});
 
-            public void afterTextChanged(Editable c) {
-                // this one too
-            }
-        });
-        
-        
-        mCompleteCheckBox = (CheckBox)v.findViewById(R.id.crime_solved);
-        mCompleteCheckBox.setChecked(mTask.isComplete());
-        mCompleteCheckBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                // set the iscompleted property
-                mTask.setComplete(isChecked);
-            }
-        });       
-  
-        mSaveButton = (Button)v.findViewById(R.id.save_button);
-        mSaveButton.setOnClickListener(new OnClickListener() {
-			
+		// adding a new notes field
+		mNotesField = (EditText) v.findViewById(R.id.notes_edittext);
+		mNotesField.setText(mTask.getNotes());
+		mNotesField.addTextChangedListener(new TextWatcher() {
+			public void onTextChanged(CharSequence c, int start, int before,
+					int count) {
+				mTask.setNotes(c.toString());
+			}
+
+			public void beforeTextChanged(CharSequence c, int start, int count,
+					int after) {
+				// this space intentionally left blank
+			}
+
+			public void afterTextChanged(Editable c) {
+				// this one too
+			}
+		});
+
+		mCompleteCheckBox = (CheckBox) v.findViewById(R.id.crime_solved);
+		mCompleteCheckBox.setChecked(mTask.isComplete());
+		mCompleteCheckBox
+				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+					public void onCheckedChanged(CompoundButton buttonView,
+							boolean isChecked) {
+						// set the iscompleted property
+						mTask.setComplete(isChecked);
+					}
+				});
+
+		mSaveButton = (Button) v.findViewById(R.id.save_button);
+		mSaveButton.setOnClickListener(new OnClickListener() {
+
 			@Override
 			public void onClick(View v) {
 				if (NavUtils.getParentActivityName(getActivity()) != null) {
 					NavUtils.navigateUpFromSameTask(getActivity());
 				}
-				
+
 			}
 		});
-        
-        return v; 
-    }
-    
-    @Override
+
+		return v;
+	}
+
+	@Override
 	public void onPause() {
 		super.onPause();
 		ToDoList.get(getActivity()).saveTasks();
@@ -148,6 +152,5 @@ public static final String DIALOG_DATE = "date";
 			return super.onOptionsItemSelected(item);
 		}
 	}
-    
-    
+
 }
