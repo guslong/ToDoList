@@ -5,6 +5,7 @@ import java.util.List;
 import net.anguslong.todolist.model.Task;
 
 import android.app.Activity;
+import android.graphics.Paint;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,12 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
+/**
+ * custom ArrayAdapter for use in the TaskListFragment
+ * 
+ * @author anguslong
+ *
+ */
 public class TaskAdapter extends ArrayAdapter<Task> {
 
   private final List<Task> list;
@@ -49,7 +56,13 @@ public class TaskAdapter extends ArrayAdapter<Task> {
                   .getTag();
               element.setComplete(buttonView.isChecked());
               Log.d("TaskListFragment", "Checkbox tag: " + buttonView.isChecked());
-
+              if (buttonView.isChecked()) {
+              viewHolder.text.setPaintFlags(viewHolder.text.getPaintFlags() |
+            		  Paint.STRIKE_THRU_TEXT_FLAG);
+              } else {
+            	  viewHolder.text.setPaintFlags(viewHolder.text.getPaintFlags() &
+                		 ~Paint.STRIKE_THRU_TEXT_FLAG);
+              }
             }
           });
       view.setTag(viewHolder);
