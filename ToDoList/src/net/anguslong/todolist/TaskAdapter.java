@@ -19,61 +19,67 @@ import android.widget.TextView;
  * custom ArrayAdapter for use in the TaskListFragment
  * 
  * @author anguslong
- *
+ * 
  */
 public class TaskAdapter extends ArrayAdapter<Task> {
 
-  private final List<Task> list;
-  private final Activity context;
+	private final List<Task> list;
+	private final Activity context;
 
-  public TaskAdapter(Activity context, List<Task> list) {
-    super(context, R.layout.list_item_task, list);
-    this.context = context;
-    this.list = list;
-  }
+	public TaskAdapter(Activity context, List<Task> list) {
+		super(context, R.layout.list_item_task, list);
+		this.context = context;
+		this.list = list;
+	}
 
-  static class ViewHolder {
-    protected TextView text;
-    protected CheckBox checkbox;
-  }
+	static class ViewHolder {
+		protected TextView text;
+		protected CheckBox checkbox;
+	}
 
-  @Override
-  public View getView(int position, View convertView, ViewGroup parent) {
-    View view = null;
-    if (convertView == null) {
-      LayoutInflater inflator = context.getLayoutInflater();
-      view = inflator.inflate(R.layout.list_item_task, null);
-      final ViewHolder viewHolder = new ViewHolder();
-      viewHolder.text = (TextView) view.findViewById(R.id.crime_list_item_titleTextView);
-      viewHolder.checkbox = (CheckBox) view.findViewById(R.id.crime_list_item_solvedCheckBox);
-      viewHolder.checkbox
-          .setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+		View view = null;
+		if (convertView == null) {
+			LayoutInflater inflator = context.getLayoutInflater();
+			view = inflator.inflate(R.layout.list_item_task, null);
+			final ViewHolder viewHolder = new ViewHolder();
+			viewHolder.text = (TextView) view
+					.findViewById(R.id.crime_list_item_titleTextView);
+			viewHolder.checkbox = (CheckBox) view
+					.findViewById(R.id.crime_list_item_solvedCheckBox);
+			viewHolder.checkbox
+					.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView,
-                boolean isChecked) {
-              Task element = (Task) viewHolder.checkbox
-                  .getTag();
-              element.setComplete(buttonView.isChecked());
-              Log.d("TaskListFragment", "Checkbox tag: " + buttonView.isChecked());
-              if (buttonView.isChecked()) {
-              viewHolder.text.setPaintFlags(viewHolder.text.getPaintFlags() |
-            		  Paint.STRIKE_THRU_TEXT_FLAG);
-              } else {
-            	  viewHolder.text.setPaintFlags(viewHolder.text.getPaintFlags() &
-                		 ~Paint.STRIKE_THRU_TEXT_FLAG);
-              }
-            }
-          });
-      view.setTag(viewHolder);
-      viewHolder.checkbox.setTag(list.get(position));
-    } else {
-      view = convertView;
-      ((ViewHolder) view.getTag()).checkbox.setTag(list.get(position));
-    }
-    ViewHolder holder = (ViewHolder) view.getTag();
-    holder.text.setText(list.get(position).getTitle());
-    holder.checkbox.setChecked(list.get(position).isComplete());
-    return view;
-  }
-} 
+						@Override
+						public void onCheckedChanged(CompoundButton buttonView,
+								boolean isChecked) {
+							Task element = (Task) viewHolder.checkbox.getTag();
+							element.setComplete(buttonView.isChecked());
+							Log.d("TaskListFragment", "Checkbox tag: "
+									+ buttonView.isChecked());
+
+							// strikethrough if checked, unstrike if unchecked
+							if (buttonView.isChecked()) {
+								viewHolder.text.setPaintFlags(viewHolder.text
+										.getPaintFlags()
+										| Paint.STRIKE_THRU_TEXT_FLAG);
+							} else {
+								viewHolder.text.setPaintFlags(viewHolder.text
+										.getPaintFlags()
+										& ~Paint.STRIKE_THRU_TEXT_FLAG);
+							}
+						}
+					});
+			view.setTag(viewHolder);
+			viewHolder.checkbox.setTag(list.get(position));
+		} else {
+			view = convertView;
+			((ViewHolder) view.getTag()).checkbox.setTag(list.get(position));
+		}
+		ViewHolder holder = (ViewHolder) view.getTag();
+		holder.text.setText(list.get(position).getTitle());
+		holder.checkbox.setChecked(list.get(position).isComplete());
+		return view;
+	}
+}

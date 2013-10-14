@@ -17,7 +17,6 @@ import android.support.v4.view.ViewPager;
 
 
 /**
- * used to be CrimePagerActivity
  * 
  * responsible for flipping through the individual TaskFragments
  * @author anguslong
@@ -40,8 +39,8 @@ public class TaskPagerActivity extends FragmentActivity {
 
 			@Override
 			public Fragment getItem(int arg0) {
-				Task crime = mTasks.get(arg0);
-				return TaskFragment.newInstance(crime.getId());
+				Task task = mTasks.get(arg0);
+				return TaskFragment.newInstance(task.getId());
 
 			}
 
@@ -56,9 +55,9 @@ public class TaskPagerActivity extends FragmentActivity {
 		mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 			
 			public void onPageSelected(int pos) {
-				Task crime = mTasks.get(pos);
-				if (crime.getTitle() != null) {
-					setTitle(crime.getTitle());
+				Task task = mTasks.get(pos);
+				if (task.getTitle() != null) {
+					setTitle(task.getTitle());
 				}
 				
 			}
@@ -74,9 +73,9 @@ public class TaskPagerActivity extends FragmentActivity {
 			}
 		});
 		
-		UUID crimeId = (UUID)getIntent().getSerializableExtra(TaskFragment.EXTRA_TASK_ID);
+		UUID taskId = (UUID)getIntent().getSerializableExtra(TaskFragment.EXTRA_TASK_ID);
 		for (int i = 0; i < mTasks.size(); i++) {
-			if (mTasks.get(i).getId().equals(crimeId)) {
+			if (mTasks.get(i).getId().equals(taskId)) {
 				mViewPager.setCurrentItem(i);
 				break;
 			}
