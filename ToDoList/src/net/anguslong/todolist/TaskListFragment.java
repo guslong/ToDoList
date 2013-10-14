@@ -7,6 +7,7 @@ import net.anguslong.todolist.model.ToDoList;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -34,7 +35,7 @@ import android.widget.TextView;
 public class TaskListFragment extends ListFragment {
 
 	private ArrayList<Task> mTasks;
-	private ArrayList<Task> mUncheckedTasks;
+	// private ArrayList<Task> mUncheckedTasks; // uncomment if using the option for showing unchecked
 	private TaskAdapter adapter;
 
 	@Override
@@ -59,8 +60,11 @@ public class TaskListFragment extends ListFragment {
 		getActivity().setTitle(R.string.title);
 		mTasks = ToDoList.get(getActivity()).getTasks();
 
-		setListAdapterAndRefresh();
-
+		// set the list adapter and refresh
+		adapter = new TaskAdapter(getActivity(), mTasks); // comment these three lines out if implementing the show only unchecked items option
+		setListAdapter(adapter);
+		adapter.notifyDataSetChanged();
+		//setListAdapterAndRefresh();  // uncomment this to restore the show only unchecked items
 	}
 
 	/**
@@ -71,26 +75,26 @@ public class TaskListFragment extends ListFragment {
 		super.onResume();
 		// if flagShowChecked is true then pass the unfiltered array to the
 		// adapter
-		setListAdapterAndRefresh(); // added this to refresh the screen
+		adapter.notifyDataSetChanged(); // added this to refresh the screen
 	}
 
-	/**
-	 * refactoring out the methods called in onCreate and onResume to get the
-	 * appropriate list depending on the preferences
-	 */
-	private void setListAdapterAndRefresh() {
-		mUncheckedTasks = getUncheckedTasks(); // create a filtered array
-
-		if (((ToDoListApplication) getActivity().getApplication())
-				.isShowCheckedItems() == true) {
-			adapter = new TaskAdapter(mTasks);
-		} else {
-			adapter = new TaskAdapter(mUncheckedTasks);
-		}
-
-		setListAdapter(adapter);
-		adapter.notifyDataSetChanged();
-	}
+	// /**
+	// * refactoring out the methods called in onCreate and onResume to get the
+	// * appropriate list depending on the preferences
+	// */
+	// private void setListAdapterAndRefresh() {
+	// mUncheckedTasks = getUncheckedTasks(); // create a filtered array
+	//
+	// if (((ToDoListApplication) getActivity().getApplication())
+	// .isShowCheckedItems() == true) {
+	// adapter = new TaskAdapter(mTasks);
+	// } else {
+	// adapter = new TaskAdapter(mUncheckedTasks);
+	// }
+	//
+	// setListAdapter(adapter);
+	// adapter.notifyDataSetChanged();
+	// }
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -112,8 +116,9 @@ public class TaskListFragment extends ListFragment {
 		case R.id.menu_item_settings:
 			startActivity(intentPrefs);
 			return true;
-			
-			// puts a help icon which displays an activity showing the author's name
+
+			// puts a help icon which displays an activity showing the author's
+			// name
 		case R.id.menu_item_info:
 			Intent intent = new Intent(getActivity(), InfoScreen.class);
 			startActivity(intent);
@@ -149,27 +154,28 @@ public class TaskListFragment extends ListFragment {
 			ToDoList.get(getActivity()).deleteTask(task);
 			adapter.notifyDataSetChanged();
 			return true;
+		default:
+			return super.onContextItemSelected(item);
 
 		}
 
-		return super.onContextItemSelected(item);
 	}
 
-	/**
-	 * this goes trhough the mTasks array and picks out only the ones that are
-	 * unchecked
-	 * 
-	 * @return a new arraylist
-	 */
-	private ArrayList<Task> getUncheckedTasks() {
-		ArrayList<Task> result = new ArrayList<Task>();
-		for (Task task : mTasks) {
-			if (task.isComplete() == false) {
-				result.add(task);
-			}
-		}
-		return result;
-	}
+	// /**
+	// * this goes trhough the mTasks array and picks out only the ones that are
+	// * unchecked
+	// *
+	// * @return a new arraylist
+	// */
+	// private ArrayList<Task> getUncheckedTasks() {
+	// ArrayList<Task> result = new ArrayList<Task>();
+	// for (Task task : mTasks) {
+	// if (task.isComplete() == false) {
+	// result.add(task);
+	// }
+	// }
+	// return result;
+	// }
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -181,14 +187,16 @@ public class TaskListFragment extends ListFragment {
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		// get the Task from the adapter
 		Task c = ((TaskAdapter) getListAdapter()).getItem(position);
+		
+		// has the checkbox been touched?
+		
+		
 		// start an instance of TaskPagerActivity
 		Intent i = new Intent(getActivity(), TaskPagerActivity.class);
 		i.putExtra(TaskFragment.EXTRA_TASK_ID, c.getId());
 		startActivityForResult(i, 0);
 
 	}
-	
-	
 
 	@Override
 	public void onPause() {
@@ -196,7 +204,6 @@ public class TaskListFragment extends ListFragment {
 		ToDoList.get(getActivity()).saveTasks();
 	}
 
-	
 	@Override
 	public void onStop() {
 		// TODO Auto-generated method stub
@@ -209,48 +216,59 @@ public class TaskListFragment extends ListFragment {
 		((TaskAdapter) getListAdapter()).notifyDataSetChanged();
 	}
 
-	private class TaskAdapter extends ArrayAdapter<Task> {
-		Task c;
-		
-		public TaskAdapter(ArrayList<Task> tasks) {
-			super(getActivity(), android.R.layout.simple_list_item_1, tasks);
-		}
-
-		@Override
-		public View getView(int position, View convertView,
-				ViewGroup parent) {
-			// if we weren't given a view, inflate one
-			if (null == convertView) {
-				convertView = getActivity().getLayoutInflater().inflate(
-						R.layout.list_item_crime, null);
-			}
-
-			// configure the view for this Crime
-			c = getItem(position);
-
-			TextView titleTextView = (TextView) convertView
-					.findViewById(R.id.crime_list_item_titleTextView);
-			titleTextView.setText(c.getTitle());
-
-			CheckBox solvedCheckBox = (CheckBox) convertView
-					.findViewById(R.id.crime_list_item_solvedCheckBox);
-			solvedCheckBox.setChecked(c.isComplete());
-
-			// adds a checkbox changed listener to the checkbox in the listview
-			solvedCheckBox
-					.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-
-						@Override
-						public void onCheckedChanged(CompoundButton buttonView,
-								boolean isChecked) {
-							c.setComplete(isChecked);
-
-						}
-
-					});
-
-			return convertView;
-		}
-	}
+//	/**
+//	 * inner array adapter class
+//	 * @author anguslong
+//	 *
+//	 */
+//	private class TaskAdapter extends ArrayAdapter<Task> {
+//		Task task;
+//
+//		
+//		public TaskAdapter(ArrayList<Task> tasks) {
+//			super(getActivity(), android.R.layout.simple_list_item_1, tasks);
+//		}
+//		
+//		@Override
+//		public View getView(int position, View convertView, ViewGroup parent) {
+//			
+//			
+//			// if we weren't given a view, inflate one
+//			if (null == convertView) {
+//				convertView = getActivity().getLayoutInflater().inflate(
+//						R.layout.list_item_crime, null);
+//			}
+//
+//			// configure the view for this Item
+//			task = getItem(position);
+//
+//			TextView titleTextView = (TextView) convertView
+//					.findViewById(R.id.crime_list_item_titleTextView);
+//			titleTextView.setText(task.getTitle());
+//
+//			final CheckBox solvedCheckBox = (CheckBox) convertView
+//					.findViewById(R.id.crime_list_item_solvedCheckBox);
+//			solvedCheckBox.setChecked(task.isComplete());
+//
+//			// adds a checkbox changed listener to the checkbox in the listview
+//			solvedCheckBox
+//					.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+//
+//						@Override
+//						public void onCheckedChanged(CompoundButton buttonView,
+//								boolean isChecked) {
+//							Log.d("TaskListFragment", "ButtonView id: " + buttonView.getId());				
+//							// set the task completed flag
+//							task.setComplete(buttonView.isChecked()); // it isn't selecting the right task: just the last one entered on the list
+//							Log.d("TaskListFragment",
+//									"Task: " + task.getTitle() + " set to: "
+//											+ task.isComplete());
+//						}
+//
+//					});
+//
+//			return convertView;
+//		}
+//	}
 
 }
