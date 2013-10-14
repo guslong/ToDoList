@@ -20,7 +20,7 @@ public class TaskAdapter extends ArrayAdapter<Task> {
   private final Activity context;
 
   public TaskAdapter(Activity context, List<Task> list) {
-    super(context, R.layout.list_item_crime, list);
+    super(context, R.layout.list_item_task, list);
     this.context = context;
     this.list = list;
   }
@@ -35,7 +35,7 @@ public class TaskAdapter extends ArrayAdapter<Task> {
     View view = null;
     if (convertView == null) {
       LayoutInflater inflator = context.getLayoutInflater();
-      view = inflator.inflate(R.layout.list_item_crime, null);
+      view = inflator.inflate(R.layout.list_item_task, null);
       final ViewHolder viewHolder = new ViewHolder();
       viewHolder.text = (TextView) view.findViewById(R.id.crime_list_item_titleTextView);
       viewHolder.checkbox = (CheckBox) view.findViewById(R.id.crime_list_item_solvedCheckBox);

@@ -62,7 +62,7 @@ public static final String DIALOG_DATE = "date";
     @TargetApi(11)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_crime, parent, false);
+        View v = inflater.inflate(R.layout.fragment_task, parent, false);
         
         //set up button for Gingerbread and above
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {

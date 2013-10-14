@@ -25,8 +25,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 /**
- * used to be CrimeListFragment
- * 
+ *  
  * controller fragment for the main task list
  * 
  * @author anguslong
@@ -72,7 +71,7 @@ public class TaskListFragment extends ListFragment {
 	public void onResume() {
 		super.onResume();
 		setListAdapterAndRefresh(); 
-		//adapter.notifyDataSetChanged(); // added this to refresh the screen
+
 		
 	}
 
